@@ -36,7 +36,7 @@ def generate_unique_filename(user_filename, md5):
     # random string
     random_str = id_generator(10)
     # hopefully unique filename
-    return str(time.now) + random_str + user_filename
+    return str(now) + random_str + user_filename
 
 
 def upload_file_to_s3(file, unique_filename, md5):
