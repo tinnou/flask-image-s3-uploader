@@ -2,7 +2,7 @@ __author__ = 'antoine.boyer'
 
 from urllib.parse import quote_plus
 import os, hashlib, tempfile
-from flask import request, jsonify, make_response, Response
+from flask import request, jsonify, make_response
 from werkzeug.utils import secure_filename
 from mimetypes import MimeTypes
 import urllib.request
@@ -11,17 +11,13 @@ from image_uploader.exceptions.Exceptions import UploadToS3Exception, FileNotAll
     S3ObjectNotFoundException
 from boto.s3.connection import *
 
-UPLOAD_FOLDER = '/Users/antoine.boyer/Desktop/images/'
-AWS_ACCESS_KEY = 'AKIAICBNCWN5UXPOVFFA'
-AWS_SECRET_KEY = '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'
-S3_BUCKET = 'tradesy-image-code-project'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = make_json_app(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['AWS_ACCESS_KEY'] = AWS_ACCESS_KEY
-app.config['AWS_SECRET_KEY'] = AWS_SECRET_KEY
-app.config['S3_BUCKET'] = S3_BUCKET
+# Retrieve config variables via env
+app.config['AWS_ACCESS_KEY'] = os.environ.get("AWS_ACCESS_KEY")
+app.config['AWS_SECRET_KEY'] = os.environ.get("AWS_SECRET_KEY")
+app.config['S3_BUCKET'] = os.environ.get("S3_BUCKET")
 
 
 # Retrieve (or create) S3 bucket
