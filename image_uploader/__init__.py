@@ -1,3 +1,6 @@
+from datetime import datetime
+import uuid
+
 __author__ = 'antoine.boyer'
 
 from urllib.parse import quote_plus
@@ -27,12 +30,11 @@ bucket = conn.create_bucket(app.config['S3_BUCKET'])
 
 def generate_unique_filename(user_filename, md5):
     # TODO : generate hash  + filename + timestamp - random string
-    # time in milliseconds
-    now = time.time()
-    # random string
-    random_str = id_generator(10)
+    #generate path
+    path = '{0:%Y-%m-%d/%H:%M}'.format(datetime.now())
     # hopefully unique filename
-    return str(now) + random_str + user_filename
+    full_name = os.path.join(path, str(uuid.uuid4()) + '-' + user_filename)
+    return full_name
 
 
 def upload_file_to_s3(file, unique_filename, md5):
@@ -113,7 +115,7 @@ def upload_file():
     return jsonify(response)
 
 
-@app.route('/image/<filename>', methods=['GET'])
+@app.route('/image/<path:filename>', methods=['GET'])
 def download_file(filename):
     # fetch file from S3
     try:
